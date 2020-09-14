@@ -8,7 +8,7 @@
 %%%%%%%%%%%%%%%%%%%%%
 % % !Mode:: "TeX:UTF-8"
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesClass{elegantbook}[2020/07/06 v4.0.2 ElegantBook document class]
+\ProvidesClass{elegantbook}[2020/08/04 v4.0.5 ElegantBook document class]
 
 \RequirePackage{kvoptions}
 \RequirePackage{etoolbox}
@@ -60,8 +60,10 @@
 \DeclareVoidOption{margintrue}{\ekv{marginpar=margintrue}}
 \DeclareVoidOption{marginfalse}{\ekv{marginpar=marginfalse}}
 
+
 \DeclareVoidOption{onecol}{\ekv{toc=onecol}}
 \DeclareVoidOption{twocol}{\ekv{toc=twocol}}
+
 
 % ----- Math option -----
 \newcommand\mailto[1]{\href{mailto:#1}{\nolinkurl{#1}}}
@@ -107,6 +109,7 @@
   \geometry{
     a4paper,
     top=25.4mm, bottom=25.4mm,
+    left=20mm, right=20mm,
     headheight=2.17cm,
     headsep=4mm,
     footskip=12mm
@@ -134,6 +137,7 @@
 }{\relax}
 
 \setcounter{tocdepth}{1}
+\renewcommand{\baselinestretch}{1.2}
 
 \PassOptionsToPackage{no-math}{fontspec}
 \RequirePackage{iftex}
@@ -185,7 +189,31 @@
   \newcommand{\cfs}{\normalfont}
 \fi
 
-\RequirePackage{newtxtext}
+
+\usepackage{fontspec}
+\setmainfont{TeX Gyre TermesX}
+\setsansfont{TeX Gyre Heros}
+\setmonofont{Latin Modern Mono}
+
+% Libertinus Serif/Libertinus Sans
+
+% TeX Gyre TermesX/TeX Gyre Heros
+
+\defaultfontfeatures[TeX Gyre TermesX,TeX Gyre Heros]{
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-italic,
+  BoldItalicFont = *-bolditalic
+}
+\defaultfontfeatures[Latin Modern Mono]{
+  Extension      = .otf,
+  UprightFont    = *-regular,
+  BoldFont       = *-bold,
+  ItalicFont     = *-oblique,
+  BoldItalicFont = *-boldoblique
+}
+
 \RequirePackage{anyfontsize}
 \ifdefstring{\ELEGANT@math}{newtx}{
   \RequirePackage{newtxmath}
@@ -209,7 +237,7 @@
 % ----- Handle Colors -----
 %% 章节以及页脚图形
 
-\RequirePackage{xcolor}
+\RequirePackage[table]{xcolor}
 \ifdefstring{\ELEGANT@color}{green}{
   \definecolor{structurecolor}{RGB}{0,120,2}%
   \definecolor{main}{RGB}{0,120,2}%
@@ -310,18 +338,7 @@
   \setlength{\footnotesep}{12pt}
 }
 
-\ifdefstring{\ELEGANT@toc}{twocol}{
-\renewcommand{\tableofcontents}{%
-\setlength{\columnsep}{2em}
-%\setlength{\columnseprule}{.8pt}
-\begin{multicols}{2}[\chapter*{\contentsname}]%
-  \@starttoc{toc}%
-\end{multicols}}
-}{\relax}
 
-
-%% 常用宏包
-\linespread{1.3}
 
 \RequirePackage{graphicx}
 %\RequirePackage{enumerate}
@@ -330,7 +347,7 @@
 % \renewcommand{\qed}{\hfill\ensuremath{\square}}
 \RequirePackage{booktabs}
 \RequirePackage{multicol,multirow}
-\RequirePackage{xcolor}
+
 \RequirePackage{fancyvrb}
 \RequirePackage{makecell,lipsum,hologo}
 %%中文结构名字
@@ -347,6 +364,7 @@
 }
 
 \ifdefstring{\ELEGANT@lang}{cn}{
+  \renewcommand{\baselinestretch}{1.3}
   \renewcommand{\contentsname}{目录}
   \renewcommand{\figurename}{图}
   \renewcommand{\tablename}{表}
@@ -355,20 +373,19 @@
   \renewcommand{\listfigurename}{插图目录}
   \renewcommand{\listtablename}{表格目录}
   \renewcommand{\bibname}{参考文献}
-  \renewcommand{\appendixname}{附录~\thechapter}
+  \renewcommand{\appendixname}{附录~\thechapter\;}
   \renewcommand{\indexname}{索\hspace{2em}引}
   \newcommand\figref[1]{\textbf{图}~\ref{#1}}
   \newcommand\tabref[1]{\textbf{表}~\ref{#1}}
   \ifdefstring{\ELEGANT@scheme}{chinese}{
-    \renewcommand{\chaptername}{第~\zhnumber{\arabic{chapter}}~章}}{
-    \renewcommand{\chaptername}{第~\thechapter{}~章}}
+    \renewcommand{\chaptername}{第\zhnumber{\arabic{chapter}}章}}{
+    \renewcommand{\chaptername}{第 \thechapter{} 章}}
   \newcommand{\authorname}{\citshape 作者：}
   \newcommand{\institutename}{\citshape 组织：}
   \newcommand{\datename}{\citshape 时间：}
   \newcommand{\versionname}{\citshape 版本：}
   \newcommand{\notename}{笔记}
   \renewcommand*{\proofname}{证明}
-  \newcommand{\problemname}{例题}
   \newcommand{\definitionname}{定义}
   \newcommand{\theoremname}{定理}
   \newcommand{\axiomname}{公理}
@@ -376,15 +393,16 @@
   \newcommand{\lemmaname}{引理}
   \newcommand{\propositionname}{命题}
   \newcommand{\corollaryname}{推论}
-  \newcommand{\examplename}{例}
-  \newcommand{\exercisename}{练习}
+  \newcommand{\examplename}{例题} %
+  \newcommand{\instancename}{示例} %
+  \newcommand{\problemname}{问题} % 问题
+  \newcommand{\exercisename}{练习} % 练习=习题
   \newcommand{\remarkname}{注}
   \newcommand{\assumptionname}{假设}
   \newcommand{\conclusionname}{结论}
   \newcommand{\solutionname}{解}
   \newcommand{\propertyname}{性质}
   \newcommand{\introductionname}{内容提要}
-  \newcommand{\problemsetname}{习题}
   \newcommand\bioinfo[2]{\gdef\@bioinfo{{\citshape #1}：#2}}
   \newcommand{\updatename}{更新：}
   \newcommand{\historyname}{版本更新历史}
@@ -393,8 +411,6 @@
   \setlength\parindent{2em}
   \newcommand\figref[1]{\textbf{Figure}~\ref{#1}}
   \newcommand\tabref[1]{\textbf{Table}~\ref{#1}}
-  \renewcommand{\partname}{\color{structurecolor} Part}
-  \renewcommand{\chaptername}{Chapter \thechapter}
   \newcommand{\authorname}{\textbf{Author: }}
   \newcommand{\institutename}{\textbf{Institute: }}
   \newcommand{\datename}{\textbf{Date: }}
@@ -417,18 +433,19 @@
   \newcommand{\solutionname}{Solution}
   \newcommand{\propertyname}{Property}
   \newcommand{\introductionname}{Introduction}
-  \newcommand{\problemsetname}{Exercise}
+  % \newcommand{\problemsetname}{Exercise}
   \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
   \newcommand{\updatename}{Updates:}
   \newcommand{\historyname}{Version History}
 }{\relax}
 
 \ifdefstring{\ELEGANT@lang}{it}{
+  % \RequirePackage[utf8]{inputenc}
   \RequirePackage[italian]{babel}
+  % \RequirePackage[T1]{fontenc}
   \setlength\parindent{2em}
   \newcommand\figref[1]{\textbf{Figura}~\ref{#1}}
   \newcommand\tabref[1]{\textbf{Tabella}~\ref{#1}}
-  \renewcommand{\chaptername}{Capitolo \arabic{chapter}}
   \newcommand{\authorname}{\textbf{Autore: }}
   \newcommand{\institutename}{\textbf{Istituto: }}
   \newcommand{\datename}{\textbf{Data: }}
@@ -451,25 +468,16 @@
   \newcommand{\solutionname}{Soluzione}
   \newcommand{\propertyname}{Proprietà}
   \newcommand{\introductionname}{Introduzione}
-  \newcommand{\problemsetname}{Esercizio}
   \newcommand\bioinfo[2]{\gdef\@bioinfo{\textbf{#1}: #2}}
   \newcommand{\updatename}{Aggiornamenti:}
   \newcommand{\historyname}{Cronologia delle versioni}
 }{\relax}
 
 
-\RequirePackage{xpatch}
-\xpatchcmd{\part}{
-  \thispagestyle{plain}}{
-  \thispagestyle{plain}}{}{}
-\xpatchcmd{\@endpart}{
-  \vfil\newpage}{
-  \vfil\newpage}{}{}
-
 \graphicspath{{./figure/}{./figures/}{./image/}{./images/}{./graphics/}{./graphic/}{./pictures/}{./picture/}}
 
-\usepackage{tikz} %% load tikz without tikz
-\usetikzlibrary{backgrounds,calc,shadows}
+\RequirePackage{tikz} %% load tikz without tikz
+\usetikzlibrary{backgrounds,calc,shadows,positioning,fit}
 \newcommand*\circled[1]{\tikz[baseline=(char.base)]{
             \node[shape=circle,draw,inner sep=1pt] (char) {#1};}}
 %  https://tex.stackexchange.com/questions/7032/good-way-to-make-textcircled-numbers
@@ -492,10 +500,10 @@
 \RequirePackage[toc,page,title,titletoc]{appendix}
 
 \setcounter{secnumdepth}{5}
-
-\titleformat{\chapter}[\style]{\bfseries}
-{\filcenter\LARGE\enspace\bfseries{\color{structurecolor}\IfAppendix{\appendixname}{\chaptername}\enspace}}{1pt}{\bfseries\color{structurecolor}\LARGE\filcenter}[]
-
+\newcommand{\chapterextra}{\ifdefstring{\ELEGANT@lang}{cn}{}{\thechapter\enspace}}
+\titleformat{\chapter}[\style]{\bfseries}{
+  \filcenter\LARGE\enspace\bfseries{\color{structurecolor} \chaptertitlename\ \chapterextra}}{1pt}{
+  \LARGE\bfseries\color{structurecolor}\filcenter}[]
 \titleformat{\section}[hang]{\bfseries}{
   \Large\bfseries{\color{structurecolor}\thesection}\enspace}{1pt}{%
   \color{structurecolor}\Large\bfseries\filright}
@@ -709,9 +717,12 @@
   \end{tcolorbox}}
 
 \RequirePackage{adforn}
-\newenvironment{problemset}[1][\chaptername~\problemsetname]{
+
+\newenvironment{problemset}[1][\chaptername~\chapterextra\exercisename]{
   \begin{center}
-    \phantomsection\addcontentsline{toc}{section}{\texorpdfstring{\chaptername\;\problemsetname}{\problemsetname}}
+    \phantomsection\addcontentsline{toc}{section}{\texorpdfstring{\chaptername\;\exercisename}{\exercisename}}
+    % \markboth{#1}{\rightmark}
+    \markright{#1}
     \textcolor{structurecolor}{\Large\bfseries\adftripleflourishleft~#1~\adftripleflourishright}
   \end{center}
   \begin{enumerate}}{
@@ -748,9 +759,9 @@
 % \renewcommand{\headrule}{}
 \fancypagestyle{plain}{\renewcommand{\headrulewidth}{0pt}\fancyhf{}\renewcommand{\headrule}{}}
 \renewcommand{\sectionmark}[1]{\markright{\thesection\, #1}{} }
-\renewcommand{\chaptermark}[1]{\markboth{\chaptername \, #1\,}{}}
+\renewcommand{\chaptermark}[1]{\markboth{\chaptername~\chapterextra{}#1}{}}
 
-\renewcommand{\baselinestretch}{1.35} 
+
 
 \renewcommand*{\maketitle}{%
 \hypersetup{pageanchor=false}
@@ -825,7 +836,7 @@
 
 
 \RequirePackage{listings}
-\renewcommand{\ttdefault}{cmtt}
+% \renewcommand{\ttdefault}{cmtt}
 \lstdefinestyle{mystyle}{
   basicstyle=%
     \ttfamily
@@ -860,8 +871,9 @@
 % add the list of change history
 \newcommand{\dateinfoline}[2]{
   \noindent\makebox[0pt][r]{%
-  \makebox[-5em][r]{%
-    \textbf{\textcolor{structurecolor}{#1}}}\quad}%
+  \makebox[-3em][r]{%
+    \small
+    \textbf{\textcolor{structurecolor}{#1}}}\;\;}%
   {\citshape\updatename\ignorespaces#2}}
 
 \newcommand{\datechange}[2]{%
@@ -884,3 +896,62 @@
   \end{enumerate}}
 
 \addbibresource[location=local]{reference.bib}
+
+\renewcommand\tableofcontents{%
+  \hypersetup{linktoc=all, linkcolor=black}
+    \if@twocolumn
+      \@restonecoltrue\onecolumn
+    \else
+      \@restonecolfalse
+    \fi
+    \chapter*{\contentsname
+        \@mkboth{%
+           \MakeUppercase\contentsname}{\MakeUppercase\contentsname}}%
+    \ifdefstring{\ELEGANT@toc}{twocol}{
+      \setlength{\columnsep}{2em}
+      \begin{multicols}{2}%
+        \@starttoc{toc}
+      \end{multicols}}{
+      \@starttoc{toc}}
+    \if@restonecol\twocolumn\fi}
+
+
+\labelformat{section}{Section~#1}
+\labelformat{theorem}{定理~#1}
+\labelformat{algorithm}{算法~#1}
+\labelformat{exercise}{习题~#1}
+
+\RequirePackage{pagecolor,afterpage}
+\def\@part[#1]#2{%
+    \newcommand*{\mylmargin}{\dimexpr\oddsidemargin+1in\relax}
+    \ifnum \c@secnumdepth >-2\relax
+      \refstepcounter{part}%
+      \addcontentsline{toc}{part}{\thepart\hspace{1em}#1}%
+    \else
+      \addcontentsline{toc}{part}{#1}%
+    \fi%
+    {
+    \centering
+    \newpagecolor{structurecolor!10}\afterpage{\restorepagecolor}
+    \interlinepenalty \@M
+    \normalfont
+    \vskip 30\p@
+    \hspace{-\the\mylmargin}
+    \fboxsep0pt
+    \colorbox{white}{
+      \begin{minipage}[c]{1.0\paperwidth}
+        \centering
+        \parbox{0.7\textwidth}{
+          \centering
+          \vspace*{1.5\baselineskip}
+          \Huge\scshape\bfseries \textcolor{structurecolor}{\thepart.\; #2}
+          \vspace*{0.7\baselineskip}}
+      \end{minipage}}}
+  \@endpart}
+
+
+\renewcommand*{\cleardoublepage}{\clearpage\if@twoside \ifodd\c@page\else
+\hbox{}%
+\thispagestyle{empty}%
+\newpage%
+\if@twocolumn\hbox{}\newpage\fi\fi\fi}
